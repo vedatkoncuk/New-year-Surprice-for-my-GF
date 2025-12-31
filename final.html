@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seni Seviyorum 💕</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0a0a1a;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: white;
+    }
+
+    /* Havai fişek canvas */
+    #fireworks {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    /* Ana container */
+    .container {
+      position: relative;
+      z-index: 10;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Fotoğraf kutusu */
+    .photo-container {
+      margin-bottom: 40px;
+      animation: fadeInScale 1.5s ease;
+    }
+
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .special-photo {
+      width: 350px;
+      height: 350px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 8px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 0 50px rgba(255, 255, 255, 0.5),
+        0 0 100px rgba(255, 192, 203, 0.3);
+      animation: glow 3s infinite;
+    }
+
+    @keyframes glow {
+
+      0%,
+      100% {
+        box-shadow: 0 0 50px rgba(255, 255, 255, 0.5),
+          0 0 100px rgba(255, 192, 203, 0.3);
+      }
+
+      50% {
+        box-shadow: 0 0 80px rgba(255, 255, 255, 0.8),
+          0 0 150px rgba(255, 192, 203, 0.5);
+      }
+    }
+
+    /* Mesaj kutusu */
+    .message-box {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      padding: 50px 40px;
+      border-radius: 30px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      max-width: 800px;
+      text-align: center;
+      animation: fadeInUp 2s ease 0.5s backwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Ana başlık */
+    .main-title {
+      font-size: 56px;
+      margin-bottom: 30px;
+      text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    /* Typewriter mesaj */
+    .typewriter-text {
+      font-size: 20px;
+      line-height: 2;
+      color: rgba(255, 255, 255, 0.95);
+      margin: 30px 0;
+      text-align: left;
+      padding: 0 20px;
+      min-height: 400px;
+    }
+
+    .typewriter-text p {
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fadeIn 0.5s forwards;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* İmza */
+    .signature {
+      font-size: 28px;
+      margin-top: 40px;
+      font-style: italic;
+      text-align: right;
+      padding-right: 20px;
+      opacity: 0;
+      animation: fadeIn 1s forwards 8s;
+    }
+
+    /* Müzik kontrolü */
+    .music-control {
+      position: fixed;
+      bottom: 30px;
+      left: 30px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 24px;
+      transition: all 0.3s;
+      z-index: 1000;
+    }
+
+    .music-control:hover {
+      transform: scale(1.1);
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Yeni yıl mesajı */
+    .new-year-message {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 80px;
+      font-weight: bold;
+      text-align: center;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      text-shadow: 0 0 50px rgba(255, 255, 255, 1);
+    }
+
+    .new-year-message.show {
+      animation: bigReveal 5s ease;
+    }
+
+    @keyframes bigReveal {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+      }
+
+      20% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.2);
+      }
+
+      80% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.2);
+      }
+    }
+
+    /* Kalpler yağmuru */
+    .heart-rain {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .falling-heart {
+      position: absolute;
+      font-size: 30px;
+      animation: fall 5s linear infinite;
+      opacity: 0;
+    }
+
+    @keyframes fall {
+      0% {
+        top: -50px;
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 1;
+      }
+
+      100% {
+        top: 100%;
+        opacity: 0;
+      }
+    }
+
+    /* Mobil uyum */
+    @media (max-width: 768px) {
+      .special-photo {
+        width: 250px;
+        height: 250px;
+      }
+
+      .message-box {
+        padding: 30px 20px;
+      }
+
+      .main-title {
+        font-size: 36px;
+      }
+
+      .typewriter-text {
+        font-size: 16px;
+        padding: 0 10px;
+        min-height: auto;
+      }
+
+      .signature {
+        font-size: 20px;
+      }
+
+      .new-year-message {
+        font-size: 40px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Havai fişek canvas -->
+  <canvas id="fireworks"></canvas>
+
+  <!-- Kalpler yağmuru -->
+  <div class="heart-rain" id="heartRain"></div>
+
+  <!-- Müzik kontrolü -->
+  <div class="music-control" id="musicControl" onclick="toggleMusic()">
+    🎵
+  </div>
+
+  <!-- Yeni yıl mesajı (animasyonlu) -->
+  <div class="new-year-message" id="newYearMessage">
+    🎆 2025 🎆<br>
+    Mutlu Yıllar!
+  </div>
+
+  <!-- Ana içerik -->
+  <div class="container">
+    <!-- Özel fotoğraf -->
+    <div class="photo-container">
+      <img src="special-photo.jpeg" alt="Bizim" class="special-photo">
+    </div>
+
+    <!-- Mesaj kutusu -->
+    <div class="message-box">
+      <h1 class="main-title">💕 Cansuyumm 💕</h1>
+
+      <div class="typewriter-text" id="typewriterText">
+        <!-- Buraya JavaScript ile mesaj yazılacak -->
+      </div>
+
+      <div class="signature" id="signature">
+        <!-- İmza buraya gelecek -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Final müziği (farklı müzik) -->
+  <audio id="backgroundMusic" loop>
+    <source src="music2.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    /* =============================================
+       MESAJINIZI BURAYA YAZIN
+       ============================================= */
+
+    const message = [
+      "Canım, sevgilim, hayatımın anlamı...",
+      "",
+      "Bu 4 yıl seninle çok güzel geçti. Her gün, her saat, her dakika seninle daha anlamlıydı.",
+      "",
+      "Sabah uyandığımda ilk düşündüğüm. Gece yatarken son düşündüğüm...",
+      "",
+      "Biliyorsun, bazen kelimeler yetersiz kalıyor. Ama sana olan sevgimi anlatmak için elimden geleni yaptım.",
+      "",
+      "Bu 4 yılda birlikte yaşadığımız her an, kalbimde özel bir yere sahip. Bütün ilklerimiz... Hepsi mükemmeldi çünkü seninleydim.",
+      "",
+      "Hep seninle olmak istiyorum. Hayallerimizi birlikte gerçekleştirmek, güzel anılar biriktirmek istiyorum.",
+      "",
+      "Sen benim için sadece bir sevgili değilsin. Sen benim en yakın arkadaşımsın, güven kaynağımsın, mutluluğumsun.",
+      "",
+      "Teşekkür ederim... Hayatıma girdiğin için, benimle olduğun için...",
+      "",
+      "Seni Kelimelerle anlatamayacağım kadar çok seviyorum. ❤️",
+      "",
+      "İyi ki varsın. İyi ki benimsin. İyi ki biziz.",
+      "",
+      "2026 yılı bizim için daha güzel olacak. Seni hep mutlu edeceğim.",
+      "",
+      "Mutlu yıllar aşkım! 🎆✨"
+    ];
+
+    const signature = "Seni çok seven, Vedat 💕"; // İSMİNİ BURAYA YAZ
+
+    /* =============================================
+       JAVASCRIPT KODLARI
+       ============================================= */
+
+    // Typewriter efekti
+    function typeWriter() {
+      const container = document.getElementById('typewriterText');
+      const signatureElement = document.getElementById('signature');
+      let paragraphIndex = 0;
+      let charIndex = 0;
+      let currentParagraph = null;
+
+      function type() {
+        if (paragraphIndex < message.length) {
+          if (charIndex === 0) {
+            // Yeni paragraf oluştur
+            currentParagraph = document.createElement('p');
+            container.appendChild(currentParagraph);
+          }
+
+          const text = message[paragraphIndex];
+
+          if (charIndex < text.length) {
+            currentParagraph.textContent += text.charAt(charIndex);
+            charIndex++;
+            setTimeout(type, 50); // Her harf 50ms arayla
+          } else {
+            // Bu paragraf bitti, sonrakine geç
+            paragraphIndex++;
+            charIndex = 0;
+            setTimeout(type, 500); // Paragraflar arası 500ms bekle
+          }
+        } else {
+          // Tüm mesaj bitti, imzayı göster
+          signatureElement.textContent = signature;
+
+          // 3 saniye sonra yeni yıl mesajını göster
+          setTimeout(showNewYearMessage, 3000);
+        }
+      }
+
+      type();
+    }
+
+    // Yeni yıl mesajı göster
+    function showNewYearMessage() {
+      const message = document.getElementById('newYearMessage');
+      message.classList.add('show');
+
+      // Havai fişekleri yoğunlaştır
+      createMoreFireworks();
+    }
+
+    // Havai fişek canvas
+    const canvas = document.getElementById('fireworks');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    // Havai fişek parçacıkları
+    class Particle {
+      constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.velocity = {
+          x: (Math.random() - 0.5) * 8,
+          y: (Math.random() - 0.5) * 8
+        };
+        this.alpha = 1;
+        this.gravity = 0.05;
+      }
+
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      update() {
+        this.velocity.y += this.gravity;
+        this.x += this.velocity.x;
+        this.y += this.velocity.y;
+        this.alpha -= 0.01;
+      }
+    }
+
+    let particles = [];
+    const colors = ['#ff0844', '#ffb199', '#ffd23f', '#00f5d4', '#9b5de5', '#f15bb5'];
+
+    function createFirework(x, y) {
+      const particleCount = 50;
+      const color = colors[Math.floor(Math.random() * colors.length)];
+
+      for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle(x, y, color));
+      }
+    }
+
+    function animateFireworks() {
+      ctx.fillStyle = 'rgba(10, 10, 26, 0.1)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach((particle, index) => {
+        if (particle.alpha <= 0) {
+          particles.splice(index, 1);
+        } else {
+          particle.update();
+          particle.draw();
+        }
+      });
+
+      requestAnimationFrame(animateFireworks);
+    }
+
+    // Rastgele havai fişek oluştur
+    function randomFirework() {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * canvas.height * 0.5;
+      createFirework(x, y);
+    }
+
+    setInterval(randomFirework, 1000);
+
+    // Daha yoğun havai fişek
+    function createMoreFireworks() {
+      const interval = setInterval(randomFirework, 200);
+      setTimeout(() => clearInterval(interval), 5000);
+    }
+
+    // Kalpler yağmuru
+    function createHeartRain() {
+      const heartRain = document.getElementById('heartRain');
+
+      setInterval(() => {
+        const heart = document.createElement('div');
+        heart.className = 'falling-heart';
+        heart.textContent = ['💕', '❤️', '💖', '💗'][Math.floor(Math.random() * 4)];
+        heart.style.left = Math.random() * 100 + '%';
+        heart.style.animationDuration = (3 + Math.random() * 3) + 's';
+        heart.style.animationDelay = Math.random() * 2 + 's';
+
+        heartRain.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 8000);
+      }, 500);
+    }
+
+    // Müzik kontrolü
+    let isMusicPlaying = false;
+    const music = document.getElementById('backgroundMusic');
+
+    function toggleMusic() {
+      const musicControl = document.getElementById('musicControl');
+
+      if (isMusicPlaying) {
+        music.pause();
+        musicControl.textContent = '🎵';
+        isMusicPlaying = false;
+      } else {
+        music.play();
+        musicControl.textContent = '🔇';
+        isMusicPlaying = true;
+      }
+    }
+
+    // Sayfa yüklenince
+    window.addEventListener('load', function () {
+      // Havai fişekleri başlat
+      animateFireworks();
+
+      // Kalpler yağmurunu başlat
+      createHeartRain();
+
+      // Typewriter'ı başlat
+      setTimeout(typeWriter, 1000);
+
+      // Müziği otomatik başlat
+      music.play().then(() => {
+        isMusicPlaying = true;
+        document.getElementById('musicControl').textContent = '🔇';
+      }).catch(e => {
+        console.log('Müzik otomatik başlatılamadı');
+      });
+    });
+  </script>
+</body>
+
+</html>

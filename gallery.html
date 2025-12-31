@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hatıralarımız 💕</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    /* Yıldızlar arka plan */
+    .stars {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 3s infinite;
+    }
+
+    @keyframes twinkle {
+
+      0%,
+      100% {
+        opacity: 0;
+      }
+
+      50% {
+        opacity: 1;
+      }
+    }
+
+    /* Ana container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Başlık */
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 50px;
+      animation: fadeIn 1s;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header h1 {
+      font-size: 48px;
+      margin-bottom: 10px;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    }
+
+    .header p {
+      font-size: 20px;
+      opacity: 0.9;
+    }
+
+    /* Timeline (Zaman çizgisi) */
+    .timeline {
+      position: relative;
+      padding: 40px 0;
+    }
+
+    /* Ortadaki çizgi */
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 2px;
+    }
+
+    /* Her bir hatıra */
+    .memory {
+      position: relative;
+      margin-bottom: 80px;
+      animation: slideIn 0.8s ease;
+      opacity: 0;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Sol tarafa gelecekler */
+    .memory:nth-child(odd) .memory-content {
+      margin-right: 52%;
+      text-align: right;
+    }
+
+    /* Sağ tarafa gelecekler */
+    .memory:nth-child(even) .memory-content {
+      margin-left: 52%;
+      text-align: left;
+    }
+
+    /* İçerik kutusu */
+    .memory-content {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .memory-content:hover {
+      transform: scale(1.05);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Tarih */
+    .memory-date {
+      font-size: 18px;
+      color: #667eea;
+      font-weight: bold;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .memory:nth-child(odd) .memory-date {
+      justify-content: flex-end;
+    }
+
+    /* Fotoğraf */
+    .memory-image {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s;
+    }
+
+    .memory-content:hover .memory-image {
+      transform: scale(1.02);
+    }
+
+    /* Başlık */
+    .memory-title {
+      font-size: 24px;
+      color: #2c3e50;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    /* Açıklama */
+    .memory-description {
+      font-size: 16px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    /* Ortadaki nokta */
+    .memory-dot {
+      position: absolute;
+      left: 50%;
+      top: 50px;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 20px;
+      background: white;
+      border: 4px solid #667eea;
+      border-radius: 50%;
+      z-index: 5;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7);
+      }
+
+      50% {
+        box-shadow: 0 0 0 10px rgba(102, 126, 234, 0);
+      }
+    }
+
+    /* İlerle butonu */
+    .next-button {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      border: none;
+      padding: 20px 40px;
+      font-size: 20px;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(245, 87, 108, 0.4);
+      transition: all 0.3s;
+      z-index: 1000;
+      font-weight: bold;
+    }
+
+    .next-button:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 15px 40px rgba(245, 87, 108, 0.6);
+    }
+
+    /* Müzik kontrolü */
+    .music-control {
+      position: fixed;
+      bottom: 30px;
+      left: 30px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 24px;
+      transition: all 0.3s;
+      z-index: 1000;
+    }
+
+    .music-control:hover {
+      transform: scale(1.1);
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Mobil uyum */
+    @media (max-width: 768px) {
+      .timeline::before {
+        left: 20px;
+      }
+
+      .memory:nth-child(odd) .memory-content,
+      .memory:nth-child(even) .memory-content {
+        margin: 0 0 0 50px;
+        text-align: left;
+      }
+
+      .memory:nth-child(odd) .memory-date {
+        justify-content: flex-start;
+      }
+
+      .memory-dot {
+        left: 20px;
+      }
+
+      .header h1 {
+        font-size: 32px;
+      }
+
+      .memory-image {
+        height: 200px;
+      }
+
+      .next-button {
+        padding: 15px 30px;
+        font-size: 16px;
+      }
+    }
+
+    /* Kalp patlaması efekti */
+    .heart-explosion {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .heart-explosion span {
+      position: absolute;
+      font-size: 30px;
+      animation: explode 1s ease-out forwards;
+    }
+
+    @keyframes explode {
+      0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(0);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translate(var(--x), var(--y)) scale(1);
+      }
+    }
+
+    /* Progress bar (kaçıncı hatıra) */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+      z-index: 9999;
+      transition: width 0.3s;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Progress bar -->
+  <div class="progress-bar" id="progressBar"></div>
+
+  <!-- Yıldızlar -->
+  <div class="stars" id="stars"></div>
+
+  <!-- Müzik kontrolü -->
+  <div class="music-control" id="musicControl" onclick="toggleMusic()">
+    🎵
+  </div>
+
+  <!-- İlerle butonu -->
+  <button class="next-button" onclick="goToFinal()">
+    Devam Et 💝
+  </button>
+
+  <!-- Ana içerik -->
+  <div class="container">
+    <div class="header">
+      <h1>💕 Bizim Hikayemiz 💕</h1>
+      <p>Güle Ağlaya Geçen Her Günümüz...</p>
+    </div>
+
+    <div class="timeline">
+
+      <!-- HATIRA 1 - İLK ÖRNEK -->
+      <div class="memory" onclick="heartExplosion(event)">
+        <div class="memory-dot"></div>
+        <div class="memory-content">
+          <div class="memory-date">
+            📅 19 EKim 2021
+          </div>
+          <img src="foto1.jpg" alt="İlk Buluşma" class="memory-image">
+          <h3 class="memory-title">🌹 Seni Gördüğüm O İlk An</h3>
+          <p class="memory-description">
+            Kavga bahanesiyle seninle tanıştığım o merdivenler o sıra dün gibi aklımda.
+
+          </p>
+        </div>
+      </div>
+
+      <!-- HATIRA 2 -->
+      <div class="memory" onclick="heartExplosion(event)">
+        <div class="memory-dot"></div>
+        <div class="memory-content">
+          <div class="memory-date">
+            📅 12 Nisan 2023
+          </div>
+          <img src="foto2.jpg" alt="İlk Tatil" class="memory-image">
+          <h3 class="memory-title">✈️ İlk Lunaparkımız</h3>
+          <p class="memory-description">
+            Gondolda bağırışların :O
+          </p>
+        </div>
+      </div>
+
+      <!-- HATIRA 3 -->
+      <div class="memory" onclick="heartExplosion(event)">
+        <div class="memory-dot"></div>
+        <div class="memory-content">
+          <div class="memory-date">
+            📅 15 Eylül 2024
+          </div>
+          <img src="foto3.jpg" alt="Doğum Günü" class="memory-image">
+          <h3 class="memory-title">🎉 Kart Gösterisi Günümüz</h3>
+          <p class="memory-description">
+            Senin mutluluğun benim mutluluğum. O gün gözlerindeki
+            mutluluğu görmek, bana dünyadaki en büyük hediyeydi. Her ne kadar Zeynep abla yüzünden gösteriyi güzel
+            bitiremesemde.
+          </p>
+        </div>
+      </div>
+
+      <!-- HATIRA 4 -->
+      <div class="memory" onclick="heartExplosion(event)">
+        <div class="memory-dot"></div>
+        <div class="memory-content">
+          <div class="memory-date">
+            📅 20 Haziran 2024
+          </div>
+          <img src="foto4.jpg" alt="Piknik" class="memory-image">
+          <h3 class="memory-title">🌳 Piknik Günümüz</h3>
+          <p class="memory-description">
+            Basit anlar bile seninle özel oluyor. O ağacın altında,
+            sadece ikimiz... Zamanın durmasını istemiştim. O an o kadar keyifliydim ki...
+          </p>
+        </div>
+      </div>
+
+      <!-- HATIRA 5 -->
+      <div class="memory" onclick="heartExplosion(event)">
+        <div class="memory-dot"></div>
+        <div class="memory-content">
+          <div class="memory-date">
+            📅 10 Şubat 2022
+          </div>
+          <img src="foto5.jpg" alt="Konser" class="memory-image">
+          <h3 class="memory-title">🎵 Beraber Dinlediğimiz Müzikler</h3>
+          <p class="memory-description">
+            Kulaklıkları paylaşıp yanyana müzik dinlediğimiz sıcaklığını hissettiğim anlar belki bi daha gelmeyecek ama
+            senle her anım bir öncekinin katlanarak büyüyen mirası.
+          </p>
+        </div>
+      </div>
+
+      <!-- HATIRA 6 -->
+      <div class="memory" onclick="heartExplosion(event)">
+        <div class="memory-dot"></div>
+        <div class="memory-content">
+          <div class="memory-date">
+            📅 25 Ekim 2024
+          </div>
+          <img src="foto6.jpg" alt="Sonbahar" class="memory-image">
+          <h3 class="memory-title">🍂 Mezuniyet Gecemiz</h3>
+          <p class="memory-description">
+            Her anımda yanımda olduğun için
+            teşekkürler sevgilim.(keşke dansın dozunu kaçırmasaydım :)
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Ses dosyası -->
+  <audio id="backgroundMusic" loop>
+    <source src="music1.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Tıklama ses efekti -->
+  <audio id="clickSound">
+    <source src="click.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    /* =============================================
+       JAVASCRIPT KODLARI
+       ============================================= */
+
+    // Yıldızları oluştur
+    function createStars() {
+      const starsContainer = document.getElementById('stars');
+      const starCount = 100;
+
+      for (let i = 0; i < starCount; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.animationDelay = Math.random() * 3 + 's';
+        starsContainer.appendChild(star);
+      }
+    }
+
+    // Hatıraları animasyonlu göster
+    function animateMemories() {
+      const memories = document.querySelectorAll('.memory');
+
+      memories.forEach((memory, index) => {
+        setTimeout(() => {
+          memory.style.opacity = '1';
+        }, index * 300); // Her biri 300ms arayla
+      });
+    }
+
+    // Kalp patlaması efekti
+    function heartExplosion(event) {
+      // Tıklama ses efekti çal
+      const clickSound = document.getElementById('clickSound');
+      clickSound.currentTime = 0;
+      clickSound.play().catch(e => console.log('Ses çalınamadı'));
+
+      const x = event.clientX;
+      const y = event.clientY;
+
+      // 8 kalp oluştur
+      for (let i = 0; i < 8; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'heart-explosion';
+        heart.innerHTML = '<span>💕</span>';
+
+        const span = heart.querySelector('span');
+        const angle = (Math.PI * 2 * i) / 8;
+        const distance = 100;
+
+        span.style.setProperty('--x', Math.cos(angle) * distance + 'px');
+        span.style.setProperty('--y', Math.sin(angle) * distance + 'px');
+
+        heart.style.left = x + 'px';
+        heart.style.top = y + 'px';
+
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 1000);
+      }
+    }
+
+    // Scroll progress bar
+    function updateProgressBar() {
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight - windowHeight;
+      const scrolled = window.scrollY;
+      const progress = (scrolled / documentHeight) * 100;
+
+      document.getElementById('progressBar').style.width = progress + '%';
+    }
+
+    window.addEventListener('scroll', updateProgressBar);
+
+    // Müzik kontrolü
+    let isMusicPlaying = false;
+    const music = document.getElementById('backgroundMusic');
+
+    function toggleMusic() {
+      const musicControl = document.getElementById('musicControl');
+
+      if (isMusicPlaying) {
+        music.pause();
+        musicControl.textContent = '🎵';
+        isMusicPlaying = false;
+      } else {
+        music.play();
+        musicControl.textContent = '🔇';
+        isMusicPlaying = true;
+      }
+    }
+
+    // Sonraki sayfaya geç
+    function goToFinal() {
+      // Müziği durdur
+      music.pause();
+
+      // Fade out
+      document.body.style.transition = 'opacity 1s';
+      document.body.style.opacity = '0';
+
+      setTimeout(() => {
+        window.location.href = 'final.html';
+      }, 1000);
+    }
+
+    // Sayfa yüklenince
+    window.addEventListener('load', function () {
+      createStars();
+      animateMemories();
+
+      // Müziği otomatik başlat
+      music.play().then(() => {
+        isMusicPlaying = true;
+        document.getElementById('musicControl').textContent = '🔇';
+      }).catch(e => {
+        console.log('Müzik otomatik başlatılamadı');
+      });
+    });
+  </script>
+</body>
+
+</html>
